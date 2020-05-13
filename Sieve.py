@@ -9,33 +9,30 @@ from csp.csp import *
 
 @process
 def producer(cout, cnt):
-    print("[INFO] Currently in producer...")
+    # print("[INFO] Currently in producer...")
     for i in range(2,cnt):
-        print("[INFO] Stuck in producer for loop...")
+        # print("[INFO] Stuck in producer for loop...")
         cout.write(i)
-    print("[INFO] Exited producer for loop...")
+    # print("[INFO] Exited producer for loop...")
     cout.poison()
     
 @process
 def worker(cin, cout):
-    print("[INFO] Currently in worker...")
+    # print("[INFO] Currently in worker...")
     try:
         ccout = None
         my_prime = cin.read()
         cout.write(my_prime)
         child_channel = Channel()
         ccout = child_channel
-        print("blah")
-        Par(worker(child_channel, cout)).start()
-        print("blah blah")
+        worker(child_channel, cout).start()
         while True:
-            print("[INFO] Stuck in worker while loop...")
+            # print("[INFO] Stuck in worker while loop...")
             new_prime = cin.read()
-            print("New Prime: {}".format(new_prime))
             if new_prime%my_prime:
-                print("[INFO] if condition inside while loop has been met...")
+                # print("[INFO] if condition inside while loop has been met...")
                 ccout.write(new_prime)
-                print("[INFO] Child channel wrote something prolly")
+                # print("[INFO] Child channel wrote something prolly")
     except Exception:
         print("[ERROR] Poison exception occurred!")
         if ccout:
@@ -43,15 +40,15 @@ def worker(cin, cout):
         else:
             cout.poison()
 
-    print("[INFO] Exited the worker...")
+    # print("[INFO] Exited the worker...")
 
 @process
 def printer(cin):
-    print("[INFO] Currently in printer...")
+    # print("[INFO] Currently in printer...")
     while True:
-        print("[INFO] Stuck in printer while loop...")
+        # print("[INFO] Stuck in printer while loop...")
         print(cin.read())
-    print("[INFO] Exited printer while loop...")
+    # print("[INFO] Exited printer while loop...")
 
 first = Channel()
 outc = Channel()
